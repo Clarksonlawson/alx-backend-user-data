@@ -1,31 +1,42 @@
 #!/usr/bin/env python3
-"""
-Module for password hashing and validation.
+"""Module for encrypting passwords.
 """
 
+
+import logging
 import bcrypt
 
+
 def hash_password(password: str) -> bytes:
-    """
-    Hashes a password using bcrypt.
+    """Hashes the provided password using bcrypt.
+
+    Use the bcrypt package to perform the hashing (with hashpw).
 
     Args:
-        password (str): The password to hash.
+        password (str): Password to be hashed.
 
     Returns:
-        bytes: The hashed password.
+        bytes: A salted, hashed password in byte string format.
     """
-    return bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+    # Salt and hash the password using the bcrypt package
+    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+
 
 def is_valid(hashed_password: bytes, password: str) -> bool:
-    """
-    Checks if a given password matches the hashed password.
+    """Validates that the provided password matches the hashed password.
 
     Args:
-        hashed_password (bytes): The hashed password.
-        password (str): The plain text password to validate.
+        hashed_password (bytes): Hashed password.
+        password (str): Password to be validated.
 
     Returns:
-        bool: True if the password is valid, False otherwise.
+        bool: True if the hashed password was formed from the given password,
+        otherwise False.
     """
-    return bcrypt.checkpw(password.encode(), hashed_password)
+    # Try to match the hashed password with the given password
+    try:
+        return bcrypt.checkpw(password.encode('utf-8'), hashed_password)
+    # If there is an exception in the process, log the error message
+    except Exception as e:
+        logging.error("Error in password validation: {}".format(e))
+        return False

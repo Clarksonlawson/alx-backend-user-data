@@ -20,13 +20,13 @@ class User(Base):
 
     @property
     def password(self) -> str:
-        """ Get the password
+        """ Getter of the password
         """
         return self._password
 
     @password.setter
     def password(self, pwd: str):
-        """ Set new password: encrypt in SHA256
+        """ Setter of a new password: encrypt in SHA256
         """
         if pwd is None or type(pwd) is not str:
             self._password = None
@@ -34,7 +34,7 @@ class User(Base):
             self._password = hashlib.sha256(pwd.encode()).hexdigest().lower()
 
     def is_valid_password(self, pwd: str) -> bool:
-        """ Validate password
+        """ Validate a password
         """
         if pwd is None or type(pwd) is not str:
             return False
